@@ -1,4 +1,14 @@
 services:
+
+  bash:
+    image: bash:latest
+    hostname: bash
+    container_name: bash
+    build:
+      dockerfile: ./files/bash.dockerfile
+    networks:
+     - net
+
   postgres:
     image: postgres:latest
     hostname: postgres
@@ -6,7 +16,7 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_PASSWORD: postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
@@ -16,6 +26,39 @@ services:
       interval: 30s
       timeout: 3s
       retries: 3
+
+  postgres-ui:
+    image: dpage/pgadmin4:latest
+    hostname: postgres-ui
+    container_name: postgres-ui
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: pgadmin
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - 5431:80
+    volumes:
+      - postgres-ui-data:/var/lib/pgadmin
+    networks:
+      - net
+
+  mysql:
+    image: mysql:latest
+    hostname: mysql
+    container_name: mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - net
+    # healthcheck:
+    #   test: ["CMD-SHELL", 'pg_isready | grep "accepting connections']
+    #   interval: 30s
+    #   timeout: 3s
+    #   retries: 3
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -128,6 +171,8 @@ networks:
     driver: bridge
 volumes:
   postgres-data:
+  postgres-ui-data:
+  mysql-data:
   kafka-data:
   redis-data:
   mongo-data:
