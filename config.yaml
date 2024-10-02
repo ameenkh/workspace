@@ -1,0 +1,30 @@
+
+globals:
+  git_path: /Users/akhoury/git
+
+services:
+    # Add services and paths to here
+    aspmsensoreventsmatcher:
+      path: go.crwd.dev/aspm/aspmsensoreventsmatcher  # relative to $git_path
+      run:
+        cmd: go run ${git_path}/cmd/aspmsensoreventsmatcher/main.go --disableFeatureFlags
+        environment:
+          - DB_HOST=localhost
+          - DB_PORT=5432
+          - DB_USER=postgres
+          - DB_PASS=postgres
+          - DB_DATABASE=aspmsensoreventsmatcher
+          - DB_DRIVER=postgres
+          - DB_MAX_CONNECTIONS=50
+      test:
+        cmd: go test something...
+        environment:
+          - DB_HOST=localhost
+          - DB_DATABASE=aspmsensoreventsmatcher_test_db
+    example2:
+      absolute_path: /Users/akhoury/Desktop/Temp/example2-service  # asolute path (without any changes)
+      run: python /Users/akhoury/Desktop/Temp/example2-service/main.py
+
+custom_commands:
+  my_command:
+    cmd: echo "This is a custom command"

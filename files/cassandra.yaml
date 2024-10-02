@@ -1,0 +1,9 @@
+
+
+cluster_name: 'Local Cluster'
+
+authenticator:
+  class_name : org.apache.cassandra.auth.PasswordAuthenticator
+
+commitlog_sync: periodic
+commitlog_sync_period: 10000ms
