@@ -22,7 +22,7 @@ services:
     networks:
       - net
     healthcheck:
-      test: ["CMD-SHELL", 'pg_isready | grep "accepting connections']
+      test: ["CMD-SHELL", 'pg_isready | grep "accepting connections"']
       interval: 30s
       timeout: 3s
       retries: 3
@@ -40,7 +40,8 @@ services:
     volumes:
       - postgres-ui-data:/var/lib/pgadmin
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - net
 
@@ -114,7 +115,8 @@ services:
     environment:
       - KAFKA_BROKERS=kafka:9094
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     networks:
       - net
   
@@ -162,7 +164,8 @@ services:
     environment:
       - ME_CONFIG_MONGODB_SERVER=mongo
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     networks:
       - net
 
