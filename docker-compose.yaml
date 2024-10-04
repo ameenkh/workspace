@@ -39,6 +39,8 @@ services:
       - 5431:80
     volumes:
       - postgres-ui-data:/var/lib/pgadmin
+    depends_on:
+      - postgres
     networks:
       - net
 
@@ -59,6 +61,21 @@ services:
     #   interval: 30s
     #   timeout: 3s
     #   retries: 3
+
+  sql-server:
+    image: mcr.microsoft.com/mssql/server:latest
+    hostname: sql-server
+    container_name: sql-server
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Sql-server1
+      - MSSQL_PID=Developer
+    volumes:
+      - sql-server-data:/var/opt/mssql
+    networks:
+    - net
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -173,6 +190,7 @@ volumes:
   postgres-data:
   postgres-ui-data:
   mysql-data:
+  sql-server-data:
   kafka-data:
   redis-data:
   mongo-data:
